@@ -13,9 +13,7 @@ module.exports = {
 
     (req, res, next) => {
 
-      checkErrors(req, res);
-
-      next();
+      checkErrors(req, res, next);
     }
   ],
 
@@ -29,9 +27,7 @@ module.exports = {
 
     (req, res, next) => {
 
-      checkErrors(req, res);
-
-      next();
+      checkErrors(req, res, next);
     }, 
   ]
 }
@@ -39,10 +35,12 @@ module.exports = {
 
 /* Helper functions */
 
-function checkErrors(req, res) {
+function checkErrors(req, res, next) {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
+
+  next();
 }
