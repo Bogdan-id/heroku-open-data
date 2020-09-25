@@ -8,7 +8,8 @@ exports.setHeaderToOrigin = function (res, origin) {
     'http://localhost:8080', 
     'http://localhost:8081',
     'http://localhost:3000',
-    'http://localhost:8080'
+    'http://localhost:8080',
+    'https://fervent-agnesi-d2138f.netlify.app'
   ];
 
   if(allowOrigin.indexOf(origin) > -1) {
