@@ -21,7 +21,7 @@ module.exports = {
     [  
       body('edrpou')
         .isNumeric('uk-UA').withMessage('must contain only digits')
-        .isLength({ min: 8, max: 8 }).withMessage('lenght should be 8')
+        .isLength({ min: 8, max: 8 }).withMessage('edrpou length should be 8')
         .escape()
     ], 
 
@@ -33,7 +33,7 @@ module.exports = {
 }
 
 
-/* Helper functions */
+/* Helper function/s */
 
 function checkErrors(req, res, next) {
   const errors = validationResult(req);

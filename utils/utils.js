@@ -4,11 +4,6 @@ exports.setHeaderToOrigin = function (res, req, next) {
   
   const origin = req.headers.origin
   let allowOrigin = [
-    'http://127.0.0.1:8000',
-    'http://127.0.0.1:8001',
-    'http://localhost:8080', 
-    'http://localhost:8081',
-    'http://localhost:3000',
     'http://localhost:8080',
     'https://fervent-agnesi-d2138f.netlify.app'
   ];

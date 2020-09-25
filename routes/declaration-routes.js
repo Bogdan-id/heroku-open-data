@@ -1,10 +1,12 @@
 'use strict'
 
+
 const url = require('url').URL;
 const fetch = require('node-fetch');
 const assert = require('assert');
 
 const midleware = require('../middlewares/midlewares.js');
+
 
 module.exports = function(app, col) {
   app.post('/get-declarations', 
