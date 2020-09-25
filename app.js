@@ -10,9 +10,9 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 app.use((req, res, next) => {
-  utils.setHeaderToOrigin(res, req.headers.origin);
-  next();
+  utils.setHeaderToOrigin(res, req, next);
 });
+
 
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient(utils.options.url, utils.options.options);

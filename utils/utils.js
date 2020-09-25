@@ -1,7 +1,8 @@
 'use strict'
 
-exports.setHeaderToOrigin = function (res, origin) {
+exports.setHeaderToOrigin = function (res, req, next) {
   
+  const origin = req.headers.origin
   let allowOrigin = [
     'http://127.0.0.1:8000',
     'http://127.0.0.1:8001',
@@ -18,6 +19,8 @@ exports.setHeaderToOrigin = function (res, origin) {
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', true);
   } 
+
+  next()
 }
 
 exports.options = {
