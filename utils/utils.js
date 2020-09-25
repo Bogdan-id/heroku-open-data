@@ -19,3 +19,13 @@ exports.setHeaderToOrigin = function (res, origin) {
     res.setHeader('Access-Control-Allow-Credentials', true);
   } 
 }
+
+exports.options = {
+  dbName: 'PepUkraine',
+  dbCollection: 'pepPersons',
+  url: `mongodb+srv://dataPep:dvaodin1233@pepukraine.zbumz.mongodb.net/${this.dbName}?retryWrites=true&w=majority`,
+  options: {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }
+}
