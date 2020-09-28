@@ -1,5 +1,7 @@
 'use strict'
 
+require('dotenv').config()
+
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -13,9 +15,10 @@ app.use((req, res, next) => {
   utils.setHeaderToOrigin(res, req, next);
 });
 
+const entry = utils.options
 
 const MongoClient = require('mongodb').MongoClient;
-const client = new MongoClient(utils.options.url, utils.options.options);
+const client = new MongoClient(entry.url, entry.options);
 
 client.connect(function(err) {
   if(err) { 
@@ -24,8 +27,8 @@ client.connect(function(err) {
     return; 
   };
 
-  const db = client.db(utils.options.dbName);
-  const col = db.collection(utils.options.dbCollection);
+  const db = client.db(entry.dbName);
+  const col = db.collection(entry.dbCollection);
 
   console.log("Connected successfully to server");
 

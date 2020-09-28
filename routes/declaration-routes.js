@@ -35,21 +35,20 @@ module.exports = function(app, col) {
     ...midleware.validateInitials,
 
     (req, res) => {
-      col.findOne({
+      col.find({
           first_name: req.body.firstName.trim(),
           last_name: req.body.lastName.trim(),
           patronymic: req.body.patronymic.trim(),
-        }, 
-
-        function(err, result) {
+        })
+        .toArray(function(err, result) {
           assert.strictEqual(null, err);
 
-          result
-            ? res.status(200).send({ isPublic: result.is_pep, result: result })
+          result.length > 0
+            ? res.status(200).json({ isPublic: result.is_pep, result: result})
             : res.status(404).send({ errors: [
-                { msg: 'Публiчну особу за ФИО не знайдено', params: 'not found' }
-              ]});
-        });
+              { msg: 'Публiчну особу за ФИО не знайдено', params: 'not found' }
+            ]});
+        })
   }),
 
   

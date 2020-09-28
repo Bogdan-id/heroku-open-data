@@ -1,5 +1,7 @@
 'use strict'
 
+require('dotenv').config()
+
 exports.setHeaderToOrigin = function (res, req, next) {
   
   const origin = req.headers.origin
@@ -19,9 +21,9 @@ exports.setHeaderToOrigin = function (res, req, next) {
 }
 
 exports.options = {
-  dbName: 'PepUkraine',
-  dbCollection: 'pepPersons',
-  url: `mongodb+srv://dataPep:dvaodin1233@pepukraine.zbumz.mongodb.net/${this.dbName}?retryWrites=true&w=majority`,
+  dbName: process.env.DB_NAME,
+  dbCollection: process.env.DB_COLLECTION,
+  url: `mongodb+srv://dataPep:${process.env.DB_PASSWORD}@pepukraine.zbumz.mongodb.net/${this.dbName}?retryWrites=true&w=majority`,
   options: {
     useNewUrlParser: true,
     useUnifiedTopology: true
