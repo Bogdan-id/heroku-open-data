@@ -35,7 +35,6 @@ module.exports = function(app, col) {
     ...midleware.validateInitials,
 
     (req, res) => {
-      console.log(req.body)
       col.find({
           first_name: req.body.firstName.trim(),
           last_name: req.body.lastName.trim(),
