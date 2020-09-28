@@ -1,11 +1,11 @@
 'use strict'
 
 require('dotenv').config()
+const utils = require('./utils/utils.js');
 
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const utils = require('./utils/utils.js');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

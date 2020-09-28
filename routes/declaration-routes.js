@@ -39,16 +39,17 @@ module.exports = function(app, col) {
           first_name: req.body.firstName.trim(),
           last_name: req.body.lastName.trim(),
           patronymic: req.body.patronymic.trim(),
+          is_pep: true
         })
         .toArray(function(err, result) {
           assert.strictEqual(null, err);
 
-          result.length > 0
-            ? res.status(200).json({ isPublic: result.is_pep, result: result})
+          result && result.length > 0
+            ? res.status(200).send(result)
             : res.status(404).send({ errors: [
-              { msg: 'Публiчну особу за ФИО не знайдено', params: 'not found' }
-            ]});
-        })
+                { msg: 'Публiчну особу за ФИО не знайдено', params: 'not found' }
+              ]});
+        });
   }),
 
   
@@ -64,11 +65,11 @@ module.exports = function(app, col) {
         .toArray(function(err, result) {
           assert.strictEqual(null, err);
 
-          result.length > 0
-            ? res.status(200).json({result: result})
+          result && result.length > 0
+            ? res.status(200).json(result)
             : res.status(404).send({ 
                 msg: 'Публiчних осiб за вказаним ЄДРПОУ не знайдено', params: 'not found' 
               });
-      });
+        });
   });
 }

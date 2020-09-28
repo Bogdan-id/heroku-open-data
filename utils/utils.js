@@ -23,7 +23,7 @@ exports.setHeaderToOrigin = function (res, req, next) {
 exports.options = {
   dbName: process.env.DB_NAME,
   dbCollection: process.env.DB_COLLECTION,
-  url: `mongodb+srv://dataPep:${process.env.DB_PASSWORD}@pepukraine.zbumz.mongodb.net/${this.dbName}?retryWrites=true&w=majority`,
+  url: `mongodb+srv://dataPep:${process.env.DB_PASSWORD}@pepukraine.zbumz.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
   options: {
     useNewUrlParser: true,
     useUnifiedTopology: true
