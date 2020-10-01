@@ -28,11 +28,10 @@ client.connect(function(err) {
   };
 
   const db = client.db(entry.dbName);
-  const col = db.collection(entry.dbCollection);
 
   console.log("Connected successfully to server");
 
-  require('./routes/declaration-routes.js')(app, col);
+  require('./routes/declaration-routes.js')(app, db);
 })
 
 const port = process.env.PORT || 8000;

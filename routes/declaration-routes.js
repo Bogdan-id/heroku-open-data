@@ -8,7 +8,7 @@ const assert = require('assert');
 const midleware = require('../middlewares/midlewares.js');
 
 
-module.exports = function(app, col) {
+module.exports = function(app, db) {
   app.post('/get-declarations', 
 
     ...midleware.validateInitials,
@@ -35,7 +35,8 @@ module.exports = function(app, col) {
     ...midleware.validateInitials,
 
     (req, res) => {
-      col.find({
+      db.collection('pepPersons')
+        .find({
           first_name: req.body.firstName.trim(),
           last_name: req.body.lastName.trim(),
           patronymic: req.body.patronymic.trim(),
@@ -58,7 +59,8 @@ module.exports = function(app, col) {
     ...midleware.validateEdrpou,
 
     (req, res) => {
-      col.find({
+      db.collection('pepPersons')
+        .find({
           is_pep: true,
           related_companies: { $elemMatch: {to_company_edrpou: req.body.edrpou} },
         })
@@ -72,4 +74,40 @@ module.exports = function(app, col) {
               });
         });
   });
+
+  app.post('/get-person-sunctions/', 
+    
+    ...midleware.validatePerson,
+
+    (req, res) => {
+      db.collection('personSunctions')
+        .find({ $text: { $search: `"${req.body.lastName} ${req.body.firstName} ${req.body.patronymic || ''}"` } })
+        .toArray(function(err, result) {
+          assert.strictEqual(null, err);
+
+          result && result.length > 0
+            ? res.status(200).json(result)
+            : res.status(404).send({ 
+                msg: 'Публiчних осiб за вказаним ЄДРПОУ не знайдено', params: 'not found' 
+              });
+        });
+    });
+
+  app.post('/get-legal-sunctions/', 
+  
+    ...midleware.validateLegal,
+
+    (req, res) => {
+      db.collection('legalSunctions')
+        .find({ $text: { $search: `"${req.body.edrpou}"` } })
+        .toArray(function(err, result) {
+          assert.strictEqual(null, err);
+
+          result && result.length > 0
+            ? res.status(200).json(result)
+            : res.status(404).send({ 
+                msg: 'Публiчних осiб за вказаним ЄДРПОУ не знайдено', params: 'not found' 
+              });
+        });
+    });
 }

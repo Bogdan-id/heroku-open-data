@@ -17,6 +17,30 @@ module.exports = {
     }
   ],
 
+  validatePerson: [
+    [
+      body('firstName').escape().not().isEmpty(),
+      body('lastName').escape().not().isEmpty(),
+      body('patronymic').escape(),
+    ], 
+
+    (req, res, next) => {
+
+      checkErrors(req, res, next);
+    }
+  ],
+
+  validateLegal: [
+    [
+      body('edrpou').escape().not().isEmpty(),
+    ], 
+
+    (req, res, next) => {
+
+      checkErrors(req, res, next);
+    }
+  ],
+
   validateEdrpou: [
     [  
       body('edrpou')
