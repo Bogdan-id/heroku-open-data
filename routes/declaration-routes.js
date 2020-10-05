@@ -81,7 +81,9 @@ module.exports = function(app, db) {
 
     (req, res) => {
       db.collection('personSunctions')
-        .find({ $text: { $search: `"${req.body.lastName} ${req.body.firstName} ${req.body.patronymic || ''}"` } })
+        .find({ $text: { 
+          $search: `"${req.body.lastName} ${req.body.firstName} ${req.body.patronymic || ''}"` } 
+        })
         .toArray(function(err, result) {
           assert.strictEqual(null, err);
 

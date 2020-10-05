@@ -32,7 +32,7 @@ module.exports = {
 
   validateLegal: [
     [
-      body('edrpou').escape().not().isEmpty(),
+      body('edrpou').not().isEmpty(),
     ], 
 
     (req, res, next) => {
