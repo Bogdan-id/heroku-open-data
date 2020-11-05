@@ -45,7 +45,7 @@ module.exports = function(app, db) {
   }),
 
   app.post('/get-edr-legal',
-    ...midleware.validateLegal,
+    // ...midleware.validateLegal,
     (req, res) => {
       console.log(req.body)
       db.collection('edr')
