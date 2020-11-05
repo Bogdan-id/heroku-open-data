@@ -7,7 +7,9 @@ exports.setHeaderToOrigin = function (res, req, next) {
   const origin = req.headers.origin
   let allowOrigin = [
     'http://localhost:8080',
-    'https://fervent-agnesi-d2138f.netlify.app'
+    'https://fervent-agnesi-d2138f.netlify.app',
+    'https://agent.bestleasing.com.ua/',
+    'http://127.0.0.1:8001/'
   ];
 
   if(allowOrigin.indexOf(origin) > -1) {
