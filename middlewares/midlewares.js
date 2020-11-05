@@ -6,9 +6,9 @@ const { body, validationResult } = require('express-validator');
 module.exports = {
   validateInitials: [
     [
-      body('firstName').escape().not().isEmpty(),
-      body('lastName').escape().not().isEmpty(),
-      body('patronymic').escape().not().isEmpty(),
+      body('firstName').not().isEmpty(),
+      body('lastName').not().isEmpty(),
+      // body('patronymic').escape().not().isEmpty(),
     ], 
 
     (req, res, next) => {
@@ -19,9 +19,9 @@ module.exports = {
 
   validatePerson: [
     [
-      body('firstName').escape().not().isEmpty(),
-      body('lastName').escape().not().isEmpty(),
-      body('patronymic').escape(),
+      body('firstName').not().isEmpty(),
+      body('lastName').not().isEmpty(),
+      // body('patronymic').escape(),
     ], 
 
     (req, res, next) => {
