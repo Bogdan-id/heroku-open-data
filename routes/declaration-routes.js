@@ -31,9 +31,11 @@ module.exports = function(app, db) {
       let person = req.body
       db.collection('edr')
         .find({
-          $or: [{boss: { $in: [`${person.lastName} ${person.firstName} ${person.patronymic}`]}}],
-          $or: [{beneficialOwners: { $in: [`${person.lastName} ${person.firstName} ${person.patronymic}`]}}],
-          $or: [{founders: { $in: [`${person.lastName} ${person.firstName} ${person.patronymic}`]}}]
+          $or: [
+            {boss: { $in: [`${person.lastName} ${person.firstName} ${person.patronymic}`]}},
+            {beneficialOwners: { $in: [`${person.lastName} ${person.firstName} ${person.patronymic}`]}},
+            {founders: { $in: [`${person.lastName} ${person.firstName} ${person.patronymic}`]}}
+          ]
         })
         .toArray(function(err, result) {
           console.log(result)
@@ -46,19 +48,13 @@ module.exports = function(app, db) {
     ...midleware.validateLegal,
     (req, res) => {
       console.log(req.body)
-      // db.collection('edr')
-      //   .find({edrpou: req.body.edrpou})
-      //   .toArray(function(err, result) {
-      //     console.log(result)
-      //     assert.strictEqual(null, err);
-      //     res.status(200).send(result);
-      //   });
-      let declarUrl = new url(`https://open-data-332145.herokuapp.com/get-company-name/${req.body.edrpou}`)
-
-      fetch(declarUrl)
-        .then(response => response.json())
-        .then(val => {console.log(val); res.send(val || [])})
-        .catch(err => res.send(err))
+      db.collection('edr')
+        .find({edrpou: req.body.edrpou})
+        .toArray(function(err, result) {
+          console.log(result)
+          assert.strictEqual(null, err);
+          res.status(200).send(result);
+        });
     }),
 
   app.post('/get-public-person',
