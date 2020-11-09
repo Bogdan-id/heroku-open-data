@@ -45,6 +45,24 @@ module.exports = function(app, db) {
         });
   }),
 
+  app.post('/get-edr-initial',
+    ...midleware.validateInitials,
+    (req, res) => {
+      let initials = `${req.body.lastName} ${req.body.firstName} ${req.body.patronymic || ''}`
+      console.log(req.body)
+      console.log(initials)
+      // Бабенко Тетяна Олександрівна
+      db.collection('EDRpersons')
+        .find({
+          initials: `${initials}`,
+        })
+        .toArray(function(err, result) {
+          console.log(result)
+          assert.strictEqual(null, err);
+          res.status(200).send(result)
+        });
+  }),
+
   app.post('/get-edr-legals',
     ...midleware.validateLegal,
     (req, res) => {
