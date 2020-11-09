@@ -14,7 +14,7 @@ module.exports = function(app, db) {
       // const options = 'doc_type%5B%5D=Щорічна&format=opendata&sort=year_desc'
 
       const { lastName, firstName, patronymic } = req.body
-      const uri = `https://declarations.com.ua/search?q=${lastName}+${firstName}+${patronymic}&deepsearch=on&doc_type[]=Щорічна&doc_type[]=Перед+звільненням&doc_type[]=Кандидата+на+посаду&doc_type[]=Після+звільнення&doc_type[]=Форма+змін&post_type[]=державної&post_type[]=місцевого&post_type[]=юридичної&format=opendata`
+      const uri = `https://declarations.com.ua/search?q=${lastName}+${firstName}+${patronymic}&deepsearch=on&format=opendata&sort=year_desc`
 
       let declarUrl = new url(uri)
 
