@@ -9,13 +9,14 @@ module.exports = function(app, db) {
   app.post('/get-declarations', 
     ...midleware.validateInitials,
     (req, res) => {  
-
-      const domain = 'https://declarations.com.ua/'
-      const options = 'doc_type%5B%5D=Щорічна&format=opendata&sort=year_desc'
+      
+      // const domain = 'https://declarations.com.ua/'
+      // const options = 'doc_type%5B%5D=Щорічна&format=opendata&sort=year_desc'
 
       const { lastName, firstName, patronymic } = req.body
+      const uri = `https://declarations.com.ua/search?q=${lastName}+${firstName}+${patronymic}&deepsearch=on&doc_type[]=Щорічна&doc_type[]=Перед+звільненням&doc_type[]=Кандидата+на+посаду&doc_type[]=Після+звільнення&doc_type[]=Форма+змін&post_type[]=державної&post_type[]=місцевого&post_type[]=юридичної`
 
-      let declarUrl = new url(`${domain}search?q=${lastName}+${firstName}+${patronymic}&${options}`)
+      let declarUrl = new url(uri)
 
       fetch(declarUrl)
         .then(response => response.json())
@@ -101,8 +102,11 @@ module.exports = function(app, db) {
     (req, res) => {
       // console.log(req.body)
       db.collection('personSunctions')
-        .find({ $text: { 
-          $search: `"${req.body.lastName} ${req.body.firstName} ${req.body.patronymic || ''}"` } 
+        .find({ 
+          $text: { 
+            $search: `"${req.body.lastName} ${req.body.firstName} ${req.body.patronymic || ''}"`,
+            $caseSensitive: false
+          } 
         })
         .toArray(function(err, result) {
           // console.log(result)
