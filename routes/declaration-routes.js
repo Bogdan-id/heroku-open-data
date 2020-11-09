@@ -112,15 +112,28 @@ module.exports = function(app, db) {
     });
 
   app.post('/get-eu-legal-sanctions/', 
-    ...midleware.validateLegal,
+    // ...midleware.validateLegal,
     (req, res) => {
       // console.log(req.body)
       db.collection('EUSanctionList')
-        .find({ $text: { $search: `"${req.body.edrpou}"` }})
-        .toArray(function(err, result) {
-          // console.log(result)
-          assert.strictEqual(null, err);
-          res.status(200).json(result)
+        .find({ 
+          $text: { $search: `"${req.body.edrpou}"` }
+         })
+         .toArray(function(err, result) {
+          if(!result.length) {
+            db.collection('EUSanctionList')
+              .find({
+                $text: { $search: `"${req.body.companyName}"`}
+              })
+              .toArray(function(err, result) {
+                assert.strictEqual(null, err);
+                res.status(200).json(result)
+              })
+          } else {
+            // console.log(result)
+            assert.strictEqual(null, err);
+            res.status(200).json(result)
+          }
         });
     });
 
@@ -258,15 +271,28 @@ module.exports = function(app, db) {
     });
 
   app.post('/get-legal-sanctions/', 
-    ...midleware.validateLegal,
+    // ...midleware.validateLegal,
     (req, res) => {
       // console.log(req.body)
       db.collection('legalSunctions')
-        .find({ $text: { $search: `"${req.body.edrpou}"` }})
+        .find({ 
+          $text: { $search: `"${req.body.edrpou}"` },
+        })
         .toArray(function(err, result) {
-          // console.log(result)
-          assert.strictEqual(null, err);
-          res.status(200).json(result)
+          if(!result.length) {
+            db.collection('legalSunctions')
+              .find({
+                $text: { $search: `"${req.body.companyName}"`}
+              })
+              .toArray(function(err, result) {
+                assert.strictEqual(null, err);
+                res.status(200).json(result)
+              })
+          } else {
+            // console.log(result)
+            assert.strictEqual(null, err);
+            res.status(200).json(result)
+          }
         });
     });
 
