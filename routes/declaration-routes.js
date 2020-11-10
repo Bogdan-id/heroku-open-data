@@ -14,7 +14,7 @@ module.exports = function(app, db) {
       // const options = 'doc_type%5B%5D=Щорічна&format=opendata&sort=year_desc'
 
       const { lastName, firstName, patronymic } = req.body
-      const uri = `https://declarations.com.ua/search?q=${lastName}+${firstName}+${patronymic}&deepsearch=on&format=opendata&sort=year_desc`
+      const uri = `https://declarations.com.ua/search?q=${lastName}+${firstName}+${patronymic}&format=opendata&sort=year_desc` // &deepsearch=on
 
       let declarUrl = new url(uri)
 
