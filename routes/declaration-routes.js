@@ -4,6 +4,7 @@ const url = require('url').URL;
 const fetch = require('node-fetch');
 const assert = require('assert');
 const midleware = require('../middlewares/midlewares.js');
+const helper = require('../utils/helpers')
 
 module.exports = function(app, db) {
   app.post('/get-declarations', 
@@ -118,19 +119,15 @@ module.exports = function(app, db) {
   app.post('/get-person-sanctions/', 
     ...midleware.validatePerson,
     (req, res) => {
-      // console.log(req.body)
-      db.collection('personSunctions')
-        .find({ 
-          $text: { 
-            $search: `"${req.body.lastName} ${req.body.firstName} ${req.body.patronymic || ''}"`,
-            $caseSensitive: false
-          } 
-        })
-        .toArray(function(err, result) {
-          // console.log(result)
-          assert.strictEqual(null, err);
-          res.status(200).json(result)
-        });
+      function queryObj(obj) {
+        return { 
+          text: {
+            $regex: new RegExp(`(?:^|\\s)${obj.qp}(?=\\s|$)`, 'gi'),
+          },
+        } 
+      }
+
+      helper.getPerson(db, 'personSunctions', req, res, queryObj)
     });
 
   app.post('/get-eu-legal-sanctions/', 
@@ -165,7 +162,7 @@ module.exports = function(app, db) {
     app.post('/un-legal-sanctions/', 
     // ...midleware.validateLegal,
     (req, res) => {
-      // console.log(req.body)
+      console.log(req.body.companyName)
       db.collection('UNOsancLegal')
         .find({ 
           $or: [
@@ -210,21 +207,15 @@ module.exports = function(app, db) {
     app.post('/un-person-terror/', 
     ...midleware.validatePerson,
     (req, res) => {
-      // console.log(req.body)
-      let initials = `${req.body.lastName} ${req.body.firstName}${req.body.patronymic ? (' ' + req.body.patronymic) : '' }`
-      console.log(initials)
-      db.collection('UNOsancTerror')
-        .find({ 
+      function queryObj(obj) {
+        return {
           $or: [
-            {fullName: initials},
-            {alsoKnown: {$in: [initials]}}
+            {fullName: {$regex: new RegExp(`(?:^|\\s)${obj.qp}(?=\\s|$)`, 'g')}},
+            {alsoKnown: {$in: [new RegExp(`(?:^|\\s)${obj.qp}(?=\\s|$)`, 'g')]}},
           ],
-        })
-        .toArray(function(err, result) {
-          // console.log(result)
-          assert.strictEqual(null, err);
-          res.status(200).json(result)
-        });
+        }
+      }
+      helper.getPerson(db, 'UNOsancTerror', req, res, queryObj)
     });
 
     app.post('/us-legal-sanctions/', 
@@ -251,45 +242,36 @@ module.exports = function(app, db) {
     app.post('/us-person-sanctions/', 
       ...midleware.validatePerson,
       (req, res) => {
-        // console.log(req.body)
-        let initials = `${req.body.lastName} ${req.body.firstName}${req.body.patronymic ? (' ' + req.body.patronymic) : '' }`
-        db.collection('usSanctionList')
-        .find({ 
-          $or: [
-            {
-              firstName: req.body.firstName,
-              lastName: req.body.lastName,
-              patronymic: req.body.patronymic
-            },
-            {
-              firstName: req.body.firstName,
-              lastName: req.body.lastName,
-            },
-            { akaList: {$elemMatch: {initials: initials}} },
-            { initials: initials }
-          ]
-        }).toArray(function(err, result) {
-            // console.log(result)
-            assert.strictEqual(null, err);
-            res.status(200).json(result)
-          });
+        function queryObj(obj) {
+          return {
+            $or: [
+              { 
+                initials: {$regex: new RegExp(`(?:^|\\s)${obj.qp}(?=\\s|$)`, 'g')},
+                sdnType: 'INDIVIDUAL'
+              },
+              { 
+                akaList: {$elemMatch: {initials: {$regex: new RegExp(`(?:^|\\s)${obj.qp}(?=\\s|$)`, 'g')} } },
+                sdnType: 'INDIVIDUAL'
+              }
+            ]
+          }
+        }
+        helper.getPerson(db, 'usSanctionList', req, res, queryObj)
       });
 
 
   app.post('/get-eu-person-sanctions/', 
     ...midleware.validatePerson,
     (req, res) => {
-      let initials = `${req.body.firstName}${req.body.patronymic ? (' ' + req.body.patronymic) : '' } ${req.body.lastName}`
-      // console.log(req.body)
-      db.collection('EUSanctionList')
-        .find({ $text: { 
-          $search: `"${initials}"` } 
-        })
-        .toArray(function(err, result) {
-          // console.log(result)
-          assert.strictEqual(null, err);
-          res.status(200).json(result)
-        });
+      function queryObj(obj) {
+        return { 
+          text: {
+            $regex: new RegExp(`(?:^|\\s)${obj.qp}(?=\\s|$)`, 'gi'),
+          },
+        } 
+      }
+
+      helper.getPerson(db, 'EUSanctionList', req, res, queryObj)
     });
 
   app.post('/get-legal-sanctions/', 
@@ -322,28 +304,14 @@ module.exports = function(app, db) {
     ...midleware.validatePerson,
     (req, res) => {
       // console.log(req.body)
-      let initials = `${req.body.lastName} ${req.body.firstName}${req.body.patronymic ? (' ' + req.body.patronymic) : '' }`
-      db.collection('UNOsancPerson')
-        .find({ 
+      function queryObj(obj) {
+        return {
           $or: [
-            {
-              firstName: req.body.firstName,
-              lastName: req.body.lastName,
-              patronymic: req.body.patronymic
-            },
-            {
-              firstName: req.body.firstName,
-              lastName: req.body.lastName,
-            },
-            {
-              INDIVIDUAL_ALIAS: { $elemMatch: {ALIAS_NAME: initials} }
-            },
-            { fullName: initials }
-        ]})
-        .toArray(function(err, result) {
-          // console.log(result)
-          assert.strictEqual(null, err);
-          res.status(200).json(result)
-        });
+            { fullName: {$regex: new RegExp(`(?:^|\\s)${obj.qp}(?=\\s|$)`, 'g')}, },
+            { INDIVIDUAL_ALIAS: {$elemMatch: {ALIAS_NAME: {$regex: new RegExp(`(?:^|\\s)${obj.qp}(?=\\s|$)`, 'g')} } } }
+          ]
+        }
+      }
+      helper.getPerson(db, 'UNOsancPerson', req, res, queryObj)
     });
 }
