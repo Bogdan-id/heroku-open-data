@@ -26,6 +26,19 @@ module.exports = function(app, db) {
     }
   ),
 
+  app.get('/get-nbu-mfo', 
+    (req, res) => {  
+      const uri = `https://bank.gov.ua/NBU_BankInfo/get_data_branch?typ=0&json`
+
+      let declarUrl = new url(uri)
+
+      fetch(declarUrl)
+        .then(response => response.json())
+        .then(val => res.send(val))
+        .catch(err => res.send(err))
+    }
+  ),
+
   app.post('/get-edr-persons',
     ...midleware.validateInitials,
     (req, res) => {
